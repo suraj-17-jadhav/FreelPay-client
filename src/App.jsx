@@ -1,18 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SignIn from './screens/signIn/SignIn';
+import SignUp from './screens/signup/SignUp';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <h1 className="text-white text-4xl font-bold">
-        🎉 Tailwind is working!
-      </h1>
-    </div>
+    <Router>
+      <Routes>
+        {/* Default route should redirect to /signin */}
+        <Route path="/" element={<Navigate to="/signin" />} />
+
+        {/* Sign In Route */}
+        <Route path="/signin" element={<SignIn />} />
+
+        {/* Sign Up Route */}
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </Router>
   );
 }
 
-export default App
+export default App;
