@@ -22,7 +22,6 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
 
         <Route path='/dashboard' element={<Dashboard/>} />
-        <Route path='/client' element={<Client/>} />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>
