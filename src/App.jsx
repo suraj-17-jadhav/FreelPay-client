@@ -5,6 +5,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SignIn from './screens/signIn/SignIn';
 import SignUp from './screens/signup/SignUp';
+import Dashboard from './screens/Dashboard/Dashboard';
+import Client from './screens/client/Client';
 
 function App() {
   return (
@@ -18,6 +20,9 @@ function App() {
 
         {/* Sign Up Route */}
         <Route path="/signup" element={<SignUp />} />
+
+        <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/client' element={<Client/>} />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>
