@@ -12,6 +12,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import NewClientModal from './components/NewClientModal';
 
 const Client = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,9 +20,10 @@ const Client = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Sample client data
-  const [clients] = useState([
+  const [clients, setClients] = useState([
     {
       id: 1,
       name: "ABC Corporation",
@@ -110,9 +112,9 @@ const Client = () => {
     // Export functionality here
   };
 
+  // Updated handleCreateClient to open modal
   const handleCreateClient = () => {
-    console.log("Creating new client...");
-    // Navigate to create client form
+    setModalVisible(true);
   };
 
   const formatDate = (dateString) => {
@@ -236,7 +238,7 @@ const Client = () => {
                           {client.name}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {client.totalInvoices} invoices
+                          {client.totalInvoices || 0} invoices
                         </div>
                       </div>
                     </div>
@@ -350,6 +352,12 @@ const Client = () => {
           </div>
         )}
       </div>
+
+      {/* New Client Modal */}
+      <NewClientModal 
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
