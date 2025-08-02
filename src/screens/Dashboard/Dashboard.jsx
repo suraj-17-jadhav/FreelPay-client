@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React from "react";
 import {
   LayoutDashboard,
   Users,
@@ -17,305 +17,124 @@ import {
   ChevronDown,
   Edit,
 } from "lucide-react";
-import DashboardComponent from "../Dashboard/components/DashboardContent";
-import ClientComponent from "../client/Client";
-import InvoiceComponent from "../invoice/Invoice";
-import PaymentComponent from "../payment/Payment";
-import ReportComponent from "../report/Report";
-import SettingComponent from "../setting/Setting";
-import AIAssistantComponent from "../aiAssistent/Assistent";
 
-const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("/dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-
-  // Route configuration with components
-  const routes = {
-    "/dashboard": {
-      component: DashboardComponent,
-      label: "Dashboard",
-      icon: LayoutDashboard,
-    },
-    "/client": { component: ClientComponent, label: "Client", icon: Users },
-    "/invoice": {
-      component: InvoiceComponent,
-      label: "Invoice",
-      icon: FileText,
-    },
-    "/payment": {
-      component: PaymentComponent,
-      label: "Payment",
-      icon: CreditCard,
-    },
-    "/report": { component: ReportComponent, label: "Report", icon: BarChart3 },
-    "/ai-assistant": {
-      component: AIAssistantComponent,
-      label: "AI Assistant",
-      icon: Bot,
-    },
-    "/setting": {
-      component: SettingComponent,
-      label: "Setting",
-      icon: Settings,
-    },
-  };
-
-  // Initialize route from URL on component mount
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (routes[path]) {
-      setActiveTab(path);
-    }
-  }, []);
-
-  // Update URL when route changes
-  const updateURL = (route) => {
-    window.history.pushState(null, '', route);
-  };
-
-  // Handle browser back/forward buttons
-  useEffect(() => {
-    const handlePopState = () => {
-      const path = window.location.pathname;
-      if (routes[path]) {
-        setActiveTab(path);
-      }
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const renderCurrentComponent = () => {
-    const route = routes[activeTab];
-    if (route) {
-      const Component = route.component;
-      return <Component />;
-    }
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">404 - Route Not Found</h2>
-          <p className="text-gray-600">The route "{currentRoute}" does not exist.</p>
-        </div>
-      </div>
-    );
-  };
-
-  const handleNavigation = (route) => {
-    setActiveTab(route);
-    updateURL(route);
-  };
-
+const DashboardContent = () => {
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`${
-          sidebarOpen ? "w-64" : "w-16"
-        } bg-white shadow-lg transition-all duration-300 flex flex-col border-r border-gray-200`}
-      >
-        {/* Logo */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <FileText className="h-6 w-6 text-white" />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
+        <div className="text-sm text-gray-500">
+          {new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-100 text-sm">Total Revenue</p>
+              <p className="text-2xl font-bold">$45,230</p>
             </div>
-            {sidebarOpen && (
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  SmartInvoice
-                </h1>
-                <p className="text-xs text-gray-500">Payment Solutions</p>
-              </div>
-            )}
+            <DollarSign className="h-8 w-8 text-blue-200" />
+          </div>
+          <div className="mt-4 flex items-center">
+            <TrendingUp className="h-4 w-4 text-green-300 mr-1" />
+            <span className="text-green-300 text-sm">
+              +12.5% from last month
+            </span>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6">
-          <ul className="space-y-2">
-            {Object.entries(routes).map(([route, config]) => {
-              const Icon = config.icon;
-              const isActive = activeTab === route;
+        <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-emerald-100 text-sm">Total Invoices</p>
+              <p className="text-2xl font-bold">1,234</p>
+            </div>
+            <FileText className="h-8 w-8 text-emerald-200" />
+          </div>
+          <div className="mt-4 flex items-center">
+            <TrendingUp className="h-4 w-4 text-green-300 mr-1" />
+            <span className="text-green-300 text-sm">
+              +8.2% from last month
+            </span>
+          </div>
+        </div>
 
-              return (
-                <li key={route}>
-                  <button
-                    onClick={() => handleNavigation(route)}
-                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
-                      isActive
-                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md transform scale-105"
-                        : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
-                    }`}
-                  >
-                    <Icon
-                      className={`h-5 w-5 ${isActive ? "text-white" : ""}`}
-                    />
-                    {sidebarOpen && (
-                      <span
-                        className={`font-medium ${
-                          isActive ? "text-white" : ""
-                        }`}
-                      >
-                        {config.label}
-                      </span>
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <div className="bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-amber-100 text-sm">Pending Payments</p>
+              <p className="text-2xl font-bold">$12,890</p>
+            </div>
+            <Clock className="h-8 w-8 text-amber-200" />
+          </div>
+          <div className="mt-4 flex items-center">
+            <span className="text-amber-200 text-sm">23 invoices pending</span>
+          </div>
+        </div>
 
-        {/* User Profile */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="relative">
-            <button
-              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className="w-full flex items-center space-x-3 px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors"
-            >
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
-              </div>
-              {sidebarOpen && (
-                <>
-                  <div className="flex-1 text-left">
-                    <p className="text-sm font-medium text-gray-900">
-                      John Doe
-                    </p>
-                  </div>
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                </>
-              )}
-            </button>
-
-            {/* Profile Dropdown */}
-            {profileDropdownOpen && (
-              <div
-                className={`absolute ${
-                  sidebarOpen ? "left-0 right-0" : "left-16"
-                } bottom-full mb-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50`}
-              >
-                <button
-                  onClick={() => {
-                    setShowProfileModal(true);
-                    setProfileDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
-                >
-                  <Edit className="h-4 w-4" />
-                  <span>Profile</span>
-                </button>
-                <button
-                  onClick={() => alert("Logging out...")}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            )}
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white transform hover:scale-105 transition-transform duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-purple-100 text-sm">Active Clients</p>
+              <p className="text-2xl font-bold">89</p>
+            </div>
+            <Users className="h-8 w-8 text-purple-200" />
+          </div>
+          <div className="mt-4 flex items-center">
+            <TrendingUp className="h-4 w-4 text-green-300 mr-1" />
+            <span className="text-green-300 text-sm">+15 new this month</span>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-8">{renderCurrentComponent()}</div>
-
-        {/* Profile Modal */}
-        {showProfileModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Edit Profile
-                </h2>
-                <button
-                  onClick={() => setShowProfileModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                    <User className="h-10 w-10 text-white" />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="John Doe"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="john@company.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Role
-                  </label>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
-                    <option value="user">User</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue="+1 (555) 123-4567"
-                  />
-                </div>
-
-                <div className="flex space-x-3 pt-4">
-                  <button
-                    onClick={() => {
-                      alert("Profile updated successfully!");
-                      setShowProfileModal(false);
-                    }}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Save Changes
-                  </button>
-                  <button
-                    onClick={() => setShowProfileModal(false)}
-                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+      {/* Recent Activity */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Recent Activity
+        </h2>
+        <div className="space-y-4">
+          <div className="flex items-center p-3 bg-blue-50 rounded-lg">
+            <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+            <div className="flex-1">
+              <p className="text-gray-900 font-medium">
+                New invoice created for ABC Corp
+              </p>
+              <p className="text-gray-500 text-sm">2 hours ago</p>
             </div>
+            <span className="text-blue-600 font-semibold">$2,450</span>
           </div>
-        )}
+          <div className="flex items-center p-3 bg-green-50 rounded-lg">
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+            <div className="flex-1">
+              <p className="text-gray-900 font-medium">
+                Payment received from XYZ Ltd
+              </p>
+              <p className="text-gray-500 text-sm">5 hours ago</p>
+            </div>
+            <span className="text-green-600 font-semibold">$1,200</span>
+          </div>
+          <div className="flex items-center p-3 bg-amber-50 rounded-lg">
+            <div className="w-2 h-2 bg-amber-500 rounded-full mr-3"></div>
+            <div className="flex-1">
+              <p className="text-gray-900 font-medium">
+                Payment reminder sent to Tech Solutions
+              </p>
+              <p className="text-gray-500 text-sm">1 day ago</p>
+            </div>
+            <span className="text-amber-600 font-semibold">Overdue</span>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default DashboardContent;
