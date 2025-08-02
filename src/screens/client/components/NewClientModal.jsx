@@ -53,7 +53,6 @@ const NewClientModal = ({ visible, onClose }) => {
 
     if (!token) {
         message.error('Please log in to continue.');
-        // Redirect to login page, e.g., window.location.href = '/login';
         navigate("/signin")
         return;
       }

@@ -51,6 +51,7 @@ export default function SignIn() {
 
       // Redirect to dashboard or home page
       navigate("/dashboard");
+      console.log("redireng.......")
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Something went wrong. Please try again.");
